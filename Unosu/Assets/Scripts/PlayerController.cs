@@ -5,7 +5,12 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] float walkSpeed;
+    [SerializeField] float endSlideSpeed;
+    [SerializeField] float endSlideStop;
+    bool endSliding = false;
+
     [SerializeField] float jumpSpeed;
+
     [SerializeField] float slideSpeed;
     [SerializeField] Vector2 slideSize;
     [SerializeField] float slideStop;
@@ -17,10 +22,11 @@ public class PlayerController : MonoBehaviour
     bool facingRight = true;
     Vector2 ogSize;
 
-    bool canMoveRight = true;
-    bool canMoveLeft = true;
-    bool canJump = true;
-    bool canSlide = true;
+    [HideInInspector] public bool canMoveRight = true;
+    [HideInInspector] public bool canMoveLeft = true;
+    [HideInInspector] public bool canJump = true;
+    [HideInInspector] public bool canSlide = true;
+    [SerializeField] bool lockKeys = true;
     
     // Start is called before the first frame update
     void Start()
@@ -59,15 +65,30 @@ public class PlayerController : MonoBehaviour
                 (Input.GetKeyUp(GameManager.Controls.MoveLeft) && canMoveLeft))
             {
                 if (!sliding)
-                {
-                    Vector2 newVel = new Vector2(0, myRB.velocity.y);
-                    myRB.velocity = newVel;
-                }
+                    endSliding = true;
 
-                if (Input.GetKeyUp(GameManager.Controls.MoveRight))
-                    canMoveRight = false; 
-                if (Input.GetKeyUp(GameManager.Controls.MoveLeft))
-                    canMoveLeft = false;
+                if (lockKeys)
+                {
+                    if (Input.GetKeyUp(GameManager.Controls.MoveRight))
+                        canMoveRight = false;
+                    if (Input.GetKeyUp(GameManager.Controls.MoveLeft))
+                        canMoveLeft = false;
+                }
+            }
+            if (endSliding)
+            {
+                Vector2 newVel = myRB.velocity;
+                if (facingRight)
+                    newVel.x -= Time.deltaTime * endSlideSpeed;
+                else
+                    newVel.x += Time.deltaTime * endSlideSpeed;
+                myRB.velocity = newVel;
+                if ((facingRight && myRB.velocity.x <= endSlideStop) || (!facingRight && myRB.velocity.x >= -endSlideStop))
+                {
+                    newVel.x = 0;
+                    myRB.velocity = newVel;
+                    endSliding = false;
+                }
             }
 
             // Jump
@@ -76,8 +97,11 @@ public class PlayerController : MonoBehaviour
                 Vector2 newVel = new Vector2(myRB.velocity.x, jumpSpeed);
                 myRB.velocity = newVel;
             }
-            if (Input.GetKeyUp(GameManager.Controls.Jump))
-                canJump = false;
+            if (lockKeys)
+            {
+                if (Input.GetKeyUp(GameManager.Controls.Jump))
+                    canJump = false;
+            }
 
             // Slide
             if (canSlide && Input.GetKeyDown(GameManager.Controls.Slide))
@@ -99,8 +123,11 @@ public class PlayerController : MonoBehaviour
                 transform.localScale = ogSize;
                 sliding = false;
             }
-            if (Input.GetKeyUp(GameManager.Controls.Slide))
-                canSlide = false;
+            if (lockKeys)
+            {
+                if (Input.GetKeyUp(GameManager.Controls.Slide))
+                    canSlide = false;
+            }
 
             // Restart
             if (Input.GetKeyDown(GameManager.Controls.Reset))

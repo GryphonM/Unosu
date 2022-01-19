@@ -268,10 +268,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   walkSpeed: 5
+  endSlideSpeed: 3
+  endSlideStop: 1
   jumpSpeed: 10
   slideSpeed: 6
   slideSize: {x: 1.5, y: 0.5}
   slideStop: 1
+  canMoveRight: 1
+  canMoveLeft: 1
+  canJump: 1
+  canSlide: 1
+  lockKeys: 0
 --- !u!1 &1591364227
 GameObject:
   m_ObjectHideFlags: 0
