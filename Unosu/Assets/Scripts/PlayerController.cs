@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Vector2 slideSize;
     [SerializeField] float slideLength;
 
-    bool grounded;
+    bool grounded = false;
     bool sliding;
 
     Rigidbody2D myRB;
@@ -54,6 +54,14 @@ public class PlayerController : MonoBehaviour
                     facingRight = !facingRight;
             }
 
+            // Stop Moving
+            if ((Input.GetKeyUp(GameManager.Controls.MoveRight) && canMoveRight) ||
+                (Input.GetKeyUp(GameManager.Controls.MoveLeft) && canMoveLeft))
+            {
+                Vector2 newVel = new Vector2(0, myRB.velocity.y);
+                myRB.velocity = newVel;
+            }
+
             // Jump
             if (canJump && grounded && Input.GetKeyDown(GameManager.Controls.Jump))
             {
@@ -67,6 +75,26 @@ public class PlayerController : MonoBehaviour
                 Vector2 newVel = new Vector2(slideSpeed, myRB.velocity.y);
                 myRB.velocity = newVel;
             }
+
+            // Restart
+            if (Input.GetKeyDown(GameManager.Controls.Reset))
+            {
+                LevelLoader loader = FindObjectOfType<LevelLoader>();
+                loader.ResetLevel(loader.CurrentLevel);
+            }
         }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Floor"))
+            grounded = true;
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+
+        if (collision.gameObject.CompareTag("Floor"))
+            grounded = false;
     }
 }
