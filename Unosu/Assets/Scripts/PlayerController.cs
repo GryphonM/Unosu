@@ -63,6 +63,11 @@ public class PlayerController : MonoBehaviour
                     Vector2 newVel = new Vector2(0, myRB.velocity.y);
                     myRB.velocity = newVel;
                 }
+
+                if (Input.GetKeyUp(GameManager.Controls.MoveRight))
+                    canMoveRight = false; 
+                if (Input.GetKeyUp(GameManager.Controls.MoveLeft))
+                    canMoveLeft = false;
             }
 
             // Jump
@@ -71,6 +76,8 @@ public class PlayerController : MonoBehaviour
                 Vector2 newVel = new Vector2(myRB.velocity.x, jumpSpeed);
                 myRB.velocity = newVel;
             }
+            if (Input.GetKeyUp(GameManager.Controls.Jump))
+                canJump = false;
 
             // Slide
             if (canSlide && Input.GetKeyDown(GameManager.Controls.Slide))
@@ -92,6 +99,8 @@ public class PlayerController : MonoBehaviour
                 transform.localScale = ogSize;
                 sliding = false;
             }
+            if (Input.GetKeyUp(GameManager.Controls.Slide))
+                canSlide = false;
 
             // Restart
             if (Input.GetKeyDown(GameManager.Controls.Reset))
