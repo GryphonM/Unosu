@@ -8,10 +8,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float jumpSpeed;
     [SerializeField] float slideSpeed;
     [SerializeField] Vector2 slideSize;
-    [SerializeField] float slideLength;
+    [SerializeField] float slideStop;
 
     bool grounded = false;
-    bool sliding;
+    bool sliding = false;
 
     Rigidbody2D myRB;
     bool facingRight = true;
@@ -35,7 +35,7 @@ public class PlayerController : MonoBehaviour
         if (!GameManager.Paused)
         {
             // Move Right
-            if (canMoveRight && Input.GetKey(GameManager.Controls.MoveRight))
+            if (canMoveRight && !sliding && Input.GetKey(GameManager.Controls.MoveRight))
             {
                 Vector2 newVel = new Vector2(walkSpeed, myRB.velocity.y);
                 myRB.velocity = newVel;
@@ -45,7 +45,7 @@ public class PlayerController : MonoBehaviour
             }
 
             // Move Left
-            if (canMoveLeft && Input.GetKey(GameManager.Controls.MoveLeft))
+            if (canMoveLeft && !sliding && Input.GetKey(GameManager.Controls.MoveLeft))
             {
                 Vector2 newVel = new Vector2(-walkSpeed, myRB.velocity.y);
                 myRB.velocity = newVel;
@@ -58,8 +58,11 @@ public class PlayerController : MonoBehaviour
             if ((Input.GetKeyUp(GameManager.Controls.MoveRight) && canMoveRight) ||
                 (Input.GetKeyUp(GameManager.Controls.MoveLeft) && canMoveLeft))
             {
-                Vector2 newVel = new Vector2(0, myRB.velocity.y);
-                myRB.velocity = newVel;
+                if (!sliding)
+                {
+                    Vector2 newVel = new Vector2(0, myRB.velocity.y);
+                    myRB.velocity = newVel;
+                }
             }
 
             // Jump
@@ -72,8 +75,22 @@ public class PlayerController : MonoBehaviour
             // Slide
             if (canSlide && Input.GetKeyDown(GameManager.Controls.Slide))
             {
-                Vector2 newVel = new Vector2(slideSpeed, myRB.velocity.y);
+                Vector2 newVel = myRB.velocity;
+                if (facingRight)
+                    newVel.x = slideSpeed;
+                else
+                    newVel.x = -slideSpeed;
                 myRB.velocity = newVel;
+
+                transform.localScale = slideSize;
+                transform.localPosition = new Vector2(transform.localPosition.x, transform.localPosition.y - (slideSize.y / 2));
+
+                sliding = true;
+            }
+            if (sliding && ((facingRight && myRB.velocity.x <= slideStop) || (!facingRight && myRB.velocity.x >= -slideStop)))
+            {
+                transform.localScale = ogSize;
+                sliding = false;
             }
 
             // Restart
