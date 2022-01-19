@@ -163,7 +163,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!61 &1163153440
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -268,10 +268,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   walkSpeed: 5
-  jumpSpeed: 5
-  slideSpeed: 15
+  jumpSpeed: 10
+  slideSpeed: 6
   slideSize: {x: 1.5, y: 0.5}
-  slideLength: 4
+  slideStop: 1
 --- !u!1 &1591364227
 GameObject:
   m_ObjectHideFlags: 0
