@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour
     bool walking = false;
 
     Rigidbody2D myRB;
-    bool facingRight = true;
+    [SerializeField] bool facingRight = true;
     Vector2 ogSize;
 
     [HideInInspector] public bool canMoveRight = true;
