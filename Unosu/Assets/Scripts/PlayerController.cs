@@ -5,14 +5,22 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] float walkSpeed;
+    [Tooltip("Backwards force applied to the player when stopping \n" +
+        "Higher = Faster Stop")]
     [SerializeField] float endSlideSpeed;
+    [Tooltip("Speed at which player stops sliding and has their velocity set to 0 \n" +
+        "Higher = Faster Stop \n" +
+        "If this is above walk speed, player will stop instantly")]
     [SerializeField] float endSlideStop;
     bool endSliding = false;
 
     [SerializeField] float jumpSpeed;
 
+    [Tooltip("Initial speed added to the player when sliding")]
     [SerializeField] float slideSpeed;
+    [Tooltip("Size player becomes what sliding\nMay be swapped out if we do animation")]
     [SerializeField] Vector2 slideSize;
+    [Tooltip("The velocity at which the player stops sliding")]
     [SerializeField] float slideStop;
 
     bool grounded = false;
