@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
 
     bool grounded = false;
     bool sliding = false;
+    bool walking = false;
 
     Rigidbody2D myRB;
     bool facingRight = true;
@@ -48,6 +49,7 @@ public class PlayerController : MonoBehaviour
 
                 if (!facingRight)
                     facingRight = !facingRight;
+                walking = true;
             }
 
             // Move Left
@@ -58,6 +60,7 @@ public class PlayerController : MonoBehaviour
 
                 if (facingRight)
                     facingRight = !facingRight;
+                walking = true;
             }
 
             // Stop Moving
@@ -69,11 +72,13 @@ public class PlayerController : MonoBehaviour
 
                 if (lockKeys)
                 {
-                    if (Input.GetKeyUp(GameManager.Controls.MoveRight))
+                    if (Input.GetKeyUp(GameManager.Controls.MoveRight) && walking)
                         canMoveRight = false;
-                    if (Input.GetKeyUp(GameManager.Controls.MoveLeft))
+                    if (Input.GetKeyUp(GameManager.Controls.MoveLeft) && walking)
                         canMoveLeft = false;
                 }
+
+                walking = false;
             }
             if (endSliding)
             {
@@ -132,6 +137,10 @@ public class PlayerController : MonoBehaviour
             // Restart
             if (Input.GetKeyDown(GameManager.Controls.Reset))
             {
+                canMoveLeft = true;
+                canMoveRight = true;
+                canJump = true;
+                canSlide = true;
                 LevelLoader loader = FindObjectOfType<LevelLoader>();
                 loader.ResetLevel(loader.CurrentLevel);
             }
