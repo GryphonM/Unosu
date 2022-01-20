@@ -145,8 +145,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   walkSpeed: 5
-  endSlideSpeed: 4
-  endSlideStop: 1.5
+  endSlideSpeed: 10
+  endSlideStop: 3
   jumpSpeed: 7.5
   slideSpeed: 6
   slideSize: {x: 1.5, y: 0.5}
