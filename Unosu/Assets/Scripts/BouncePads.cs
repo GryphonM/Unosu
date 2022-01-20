@@ -22,7 +22,9 @@ public class BouncePads : MonoBehaviour
         if (collision.gameObject.tag == "Player")
         {
             Rigidbody2D rb = collision.gameObject.GetComponent<Rigidbody2D>();
-            rb.AddForce(transform.up * thrust);
+            Vector2 newVel = rb.velocity;
+            newVel.y = thrust;
+            rb.velocity = newVel;
         }
     }
 }
