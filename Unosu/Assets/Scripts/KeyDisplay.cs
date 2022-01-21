@@ -54,4 +54,9 @@ public class KeyDisplay : MonoBehaviour
         else
             Slide.GetComponent<SpriteRenderer>().color = DarkGrey;
     }
+
+    public void ResetPlayer()
+    {
+        playerCont = FindObjectOfType<PlayerController>();
+    }
 }

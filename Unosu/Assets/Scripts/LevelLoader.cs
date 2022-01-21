@@ -21,10 +21,13 @@ public class LevelLoader : MonoBehaviour
     public void ResetLevel(int level)
     {
         //account for arrays starting at zero
-        level = level - 1;        
+        level = level - 1;
         if (FindObjectOfType<Level>() != null)
             Destroy(FindObjectOfType<Level>().gameObject);
+        if (FindObjectOfType<PlayerController>() != null)
+            Destroy(FindObjectOfType<PlayerController>().gameObject);
         Instantiate(levels[level]);
+        FindObjectOfType<KeyDisplay>().ResetPlayer();
     }
     public void NextLevel()
     {
