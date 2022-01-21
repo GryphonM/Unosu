@@ -27,7 +27,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 866174395626677234}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.12008439, y: -3.8467073, z: 0.22435632}
+  m_LocalPosition: {x: 0.12008439, y: -3.8467073, z: 0}
   m_LocalScale: {x: 4.7927, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1399709354397272861}
@@ -197,7 +197,7 @@ GameObject:
   - component: {fileID: 1399709354397272861}
   m_Layer: 0
   m_Name: MovingPlat
-  m_TagString: Untagged
+  m_TagString: Floor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -210,7 +210,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8361177108504784791}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.100084394, y: 0.6667074, z: -0.22435632}
+  m_LocalPosition: {x: -0.100084394, y: 0.6667074, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 866174395626677233}
