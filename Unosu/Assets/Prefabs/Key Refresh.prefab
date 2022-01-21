@@ -123,3 +123,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   KeyToRefresh: 0
+  JumpColor: {r: 0.13238695, g: 0.77484185, b: 0.8018868, a: 1}
+  LeftColor: {r: 1, g: 0.07075471, b: 0.07075471, a: 1}
+  RightColor: {r: 1, g: 0.6324958, b: 0, a: 1}
+  SlideColor: {r: 0.99636745, g: 0, b: 1, a: 1}
