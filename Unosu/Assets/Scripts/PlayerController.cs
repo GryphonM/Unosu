@@ -26,7 +26,6 @@ public class PlayerController : MonoBehaviour
     bool grounded = false;
     bool sliding = false;
     bool walking = false;
-    bool jumped = false;
 
     Rigidbody2D myRB;
     [SerializeField] bool facingRight = true;
@@ -108,14 +107,10 @@ public class PlayerController : MonoBehaviour
             {
                 Vector2 newVel = new Vector2(myRB.velocity.x, jumpSpeed);
                 myRB.velocity = newVel;
-                jumped = true;
-            }
-            if (lockKeys)
-            {
-                if (Input.GetKeyUp(GameManager.Controls.Jump) && jumped)
+
+                if (lockKeys)
                 {
                     canJump = false;
-                    jumped = false;
                 }
             }
 
@@ -133,16 +128,16 @@ public class PlayerController : MonoBehaviour
                 transform.localPosition = new Vector2(transform.localPosition.x, transform.localPosition.y - (slideSize.y / 2));
 
                 sliding = true;
+
+                if (lockKeys)
+                {
+                    canSlide = false;
+                }
             }
             if (sliding && ((facingRight && myRB.velocity.x <= slideStop) || (!facingRight && myRB.velocity.x >= -slideStop)))
             {
                 transform.localScale /= slideSize;
                 sliding = false;
-            }
-            if (lockKeys)
-            {
-                if (Input.GetKeyUp(GameManager.Controls.Slide))
-                    canSlide = false;
             }
 
             // Restart
@@ -158,7 +153,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionStay2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Floor"))
         {
