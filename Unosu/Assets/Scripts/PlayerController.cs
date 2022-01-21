@@ -30,7 +30,6 @@ public class PlayerController : MonoBehaviour
 
     Rigidbody2D myRB;
     [SerializeField] bool facingRight = true;
-    Vector2 ogSize;
 
     [HideInInspector] public bool canMoveRight = true;
     [HideInInspector] public bool canMoveLeft = true;
@@ -42,7 +41,6 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         myRB = GetComponent<Rigidbody2D>();
-        ogSize = transform.localScale;
     }
 
     // Update is called once per frame
@@ -131,14 +129,14 @@ public class PlayerController : MonoBehaviour
                     newVel.x = -slideSpeed;
                 myRB.velocity = newVel;
 
-                transform.localScale = slideSize;
+                transform.localScale *= slideSize;
                 transform.localPosition = new Vector2(transform.localPosition.x, transform.localPosition.y - (slideSize.y / 2));
 
                 sliding = true;
             }
             if (sliding && ((facingRight && myRB.velocity.x <= slideStop) || (!facingRight && myRB.velocity.x >= -slideStop)))
             {
-                transform.localScale = ogSize;
+                transform.localScale /= slideSize;
                 sliding = false;
             }
             if (lockKeys)
