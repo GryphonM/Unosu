@@ -105,6 +105,12 @@ public class PlayerController : MonoBehaviour
             // Jump
             if (canJump && grounded && Input.GetKeyDown(GameManager.Controls.Jump))
             {
+                // Stop Sliding
+                if (sliding)
+                {
+                    StopSliding();
+                }
+
                 Vector2 newVel = new Vector2(myRB.velocity.x, jumpSpeed);
                 myRB.velocity = newVel;
 
@@ -117,6 +123,7 @@ public class PlayerController : MonoBehaviour
             // Slide
             if (canSlide && Input.GetKeyDown(GameManager.Controls.Slide))
             {
+                endSliding = false;
                 Vector2 newVel = myRB.velocity;
                 if (facingRight)
                     newVel.x = slideSpeed;
@@ -136,8 +143,7 @@ public class PlayerController : MonoBehaviour
             }
             if (sliding && ((facingRight && myRB.velocity.x <= slideStop) || (!facingRight && myRB.velocity.x >= -slideStop)))
             {
-                transform.localScale /= slideSize;
-                sliding = false;
+                StopSliding();
             }
 
             // Restart
@@ -166,5 +172,17 @@ public class PlayerController : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Floor"))
             grounded = false;
+    }
+
+    private void StopSliding()
+    {
+        transform.localScale /= slideSize;
+        Vector2 newPos = transform.localPosition;
+        if (facingRight)
+            newPos.x += Mathf.Abs(transform.localScale.x - slideSize.x) / 2;
+        else
+            newPos.x -= Mathf.Abs(transform.localScale.x - slideSize.x) / 2;
+        transform.localPosition = newPos;
+        sliding = false;
     }
 }
