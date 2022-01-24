@@ -1,0 +1,5 @@
+Move Right: D
+Move Left: A
+Jump: Space
+Slide: Left Shift
+Restart: R
