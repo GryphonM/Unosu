@@ -322,6 +322,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: End Game
       objectReference: {fileID: 0}
+    - target: {fileID: 6246996515053036569, guid: 2aa929e81fa648740a0bdc38123690c5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2aa929e81fa648740a0bdc38123690c5, type: 3}
 --- !u!1001 &8248188912585340208
@@ -381,7 +385,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5272761453068256308, guid: f83a3512b6afe264b80d3d72c74aedd5, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f83a3512b6afe264b80d3d72c74aedd5, type: 3}
