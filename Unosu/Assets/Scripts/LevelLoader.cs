@@ -27,11 +27,17 @@ public class LevelLoader : MonoBehaviour
         if (FindObjectOfType<PlayerController>() != null)
             Destroy(FindObjectOfType<PlayerController>().gameObject);
         Instantiate(levels[level]);
-        FindObjectOfType<KeyDisplay>().ResetPlayer();
+        FindObjectOfType<KeyDisplay>(true).ResetPlayer();
     }
     public void NextLevel()
     {
         CurrentLevel += 1;
+        ResetLevel(CurrentLevel);
+    }
+
+    public void SetLevel(int level)
+    {
+        CurrentLevel = level;
         ResetLevel(CurrentLevel);
     }
 }
