@@ -16,18 +16,42 @@ public class MovingPlatform : MonoBehaviour
         
     }
     
-    // Update is called once per frame
-    void Update()
+    //// Update is called once per frame
+    //void Update()
+    //{
+    //    if (MoveToOne == true)
+    //    {
+    //        if(detectionDist > Vector3.Distance(Point1.gameObject.transform.position, this.gameObject.transform.position))
+    //        {
+    //            MoveToOne = false;
+    //            timer = 0;
+    //        }
+    //        this.transform.position = Vector3.Lerp(this.gameObject.transform.position, Point1.gameObject.transform.position, timer / duration);
+    //        timer += Time.deltaTime;
+    //    }
+    //    else
+    //    {
+    //        if (detectionDist > Vector3.Distance(Point2.gameObject.transform.position, this.gameObject.transform.position))
+    //        {
+    //            MoveToOne = true;
+    //            timer = 0;
+    //        }
+    //        this.transform.position = Vector3.Lerp(this.gameObject.transform.position, Point2.gameObject.transform.position, timer / duration);
+    //        timer += Time.deltaTime;
+    //    }
+    //}
+
+    void FixedUpdate()
     {
         if (MoveToOne == true)
         {
-            if(detectionDist > Vector3.Distance(Point1.gameObject.transform.position, this.gameObject.transform.position))
+            if (detectionDist > Vector3.Distance(Point1.gameObject.transform.position, this.gameObject.transform.position))
             {
                 MoveToOne = false;
                 timer = 0;
             }
             this.transform.position = Vector3.Lerp(this.gameObject.transform.position, Point1.gameObject.transform.position, timer / duration);
-            timer += Time.deltaTime;
+            timer += Time.fixedDeltaTime;
         }
         else
         {
@@ -37,7 +61,7 @@ public class MovingPlatform : MonoBehaviour
                 timer = 0;
             }
             this.transform.position = Vector3.Lerp(this.gameObject.transform.position, Point2.gameObject.transform.position, timer / duration);
-            timer += Time.deltaTime;
+            timer += Time.fixedDeltaTime;
         }
     }
 
