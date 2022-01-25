@@ -38,6 +38,8 @@ public class PlayerController : MonoBehaviour
     bool diving = false;
     bool walking = false;
 
+    bool newLevel = true;
+
     Rigidbody2D myRB;
     Quaternion ogRot;
 
@@ -63,58 +65,67 @@ public class PlayerController : MonoBehaviour
     {
         if (!GameManager.Paused)
         {
-            // Move Right
-            if (canMoveRight && !sliding && Input.GetKey(GameManager.Controls.MoveRight))
+            if (Input.GetKeyDown(GameManager.Controls.MoveLeft) || Input.GetKeyDown(GameManager.Controls.MoveRight))
             {
-                Vector2 newVel = new Vector2(walkSpeed, myRB.velocity.y);
-                myRB.velocity = newVel;
-
-                if (!facingRight)
-                    facingRight = !facingRight;
-                walking = true;
+                newLevel = false;
             }
 
-            // Move Left
-            if (canMoveLeft && !sliding && Input.GetKey(GameManager.Controls.MoveLeft))
+            // Don't move if player was just spawned
+            if (!newLevel)
             {
-                Vector2 newVel = new Vector2(-walkSpeed, myRB.velocity.y);
-                myRB.velocity = newVel;
-
-                if (facingRight)
-                    facingRight = !facingRight;
-                walking = true;
-            }
-
-            // Stop Moving
-            if ((Input.GetKeyUp(GameManager.Controls.MoveRight) && canMoveRight) ||
-                (Input.GetKeyUp(GameManager.Controls.MoveLeft) && canMoveLeft))
-            {
-                if (!sliding)
-                    endSliding = true;
-
-                if (lockKeys)
+                // Move Right
+                if (canMoveRight && !sliding && Input.GetKey(GameManager.Controls.MoveRight))
                 {
-                    if (Input.GetKeyUp(GameManager.Controls.MoveRight) && walking)
-                        canMoveRight = false;
-                    if (Input.GetKeyUp(GameManager.Controls.MoveLeft) && walking)
-                        canMoveLeft = false;
+                    Vector2 newVel = new Vector2(walkSpeed, myRB.velocity.y);
+                    myRB.velocity = newVel;
+
+                    if (!facingRight)
+                        facingRight = !facingRight;
+                    walking = true;
                 }
 
-                walking = false;
-            }
-            if (endSliding)
-            {
-                Vector2 newVel = myRB.velocity;
-                if (facingRight)
-                    newVel.x -= Time.deltaTime * endSlideSpeed;
-                else
-                    newVel.x += Time.deltaTime * endSlideSpeed;
-                myRB.velocity = newVel;
-                if ((facingRight && myRB.velocity.x <= endSlideStop) || (!facingRight && myRB.velocity.x >= -endSlideStop))
+                // Move Left
+                if (canMoveLeft && !sliding && Input.GetKey(GameManager.Controls.MoveLeft))
                 {
-                    newVel.x = 0;
+                    Vector2 newVel = new Vector2(-walkSpeed, myRB.velocity.y);
                     myRB.velocity = newVel;
-                    endSliding = false;
+
+                    if (facingRight)
+                        facingRight = !facingRight;
+                    walking = true;
+                }
+
+                // Stop Moving
+                if ((Input.GetKeyUp(GameManager.Controls.MoveRight) && canMoveRight) ||
+                    (Input.GetKeyUp(GameManager.Controls.MoveLeft) && canMoveLeft))
+                {
+                    if (!sliding)
+                        endSliding = true;
+
+                    if (lockKeys)
+                    {
+                        if (Input.GetKeyUp(GameManager.Controls.MoveRight) && walking)
+                            canMoveRight = false;
+                        if (Input.GetKeyUp(GameManager.Controls.MoveLeft) && walking)
+                            canMoveLeft = false;
+                    }
+
+                    walking = false;
+                }
+                if (endSliding)
+                {
+                    Vector2 newVel = myRB.velocity;
+                    if (facingRight)
+                        newVel.x -= Time.deltaTime * endSlideSpeed;
+                    else
+                        newVel.x += Time.deltaTime * endSlideSpeed;
+                    myRB.velocity = newVel;
+                    if ((facingRight && myRB.velocity.x <= endSlideStop) || (!facingRight && myRB.velocity.x >= -endSlideStop))
+                    {
+                        newVel.x = 0;
+                        myRB.velocity = newVel;
+                        endSliding = false;
+                    }
                 }
             }
 
@@ -134,6 +145,8 @@ public class PlayerController : MonoBehaviour
                 {
                     canJump = false;
                 }
+                if (newLevel)
+                    newLevel = false;
             }
 
             // Slide
@@ -175,6 +188,8 @@ public class PlayerController : MonoBehaviour
                 {
                     canSlide = false;
                 }
+                if (newLevel)
+                    newLevel = false;
             }
             if (sliding && !diving && ((facingRight && myRB.velocity.x <= slideStop) || (!facingRight && myRB.velocity.x >= -slideStop)))
             {
@@ -184,10 +199,6 @@ public class PlayerController : MonoBehaviour
             // Restart
             if (Input.GetKeyDown(GameManager.Controls.Reset))
             {
-                canMoveLeft = true;
-                canMoveRight = true;
-                canJump = true;
-                canSlide = true;
                 LevelLoader loader = FindObjectOfType<LevelLoader>();
                 loader.ResetLevel(loader.CurrentLevel);
             }

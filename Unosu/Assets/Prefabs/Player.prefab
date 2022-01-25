@@ -153,7 +153,7 @@ MonoBehaviour:
   slideStop: 1
   diveSpeed: {x: 2, y: -5}
   diveRotation: 60
-  positionOffset: 0.25
+  positionOffset: 0.5
   facingRight: 1
   canMoveRight: 1
   canMoveLeft: 1
