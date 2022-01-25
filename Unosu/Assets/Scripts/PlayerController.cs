@@ -14,20 +14,35 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float endSlideStop;
     bool endSliding = false;
 
+    [Space(10)]
+
     [SerializeField] float jumpSpeed;
+
+    [Space(10)]
 
     [Tooltip("Initial speed added to the player when sliding")]
     [SerializeField] float slideSpeed;
     [Tooltip("Size player becomes what sliding\nMay be swapped out if we do animation")]
     [SerializeField] Vector2 slideSize;
-    [Tooltip("The velocity at which the player stops sliding")]
+    [Tooltip("The x velocity at which the player stops sliding")]
     [SerializeField] float slideStop;
+    [Tooltip("The velocity the player dives downwards at")]
+    [SerializeField] Vector2 diveSpeed;
+    [Tooltip("Rotation around the Z axis when diving")]
+    [SerializeField] float diveRotation = 90;
+    [Tooltip("Y change to position when finished diving")]
+    [SerializeField] float positionOffset;
 
     bool grounded = false;
     bool sliding = false;
+    bool diving = false;
     bool walking = false;
 
     Rigidbody2D myRB;
+    Quaternion ogRot;
+
+    [Space(10)]
+
     [SerializeField] bool facingRight = true;
 
     [HideInInspector] public bool canMoveRight = true;
@@ -40,6 +55,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         myRB = GetComponent<Rigidbody2D>();
+        ogRot = transform.rotation;
     }
 
     // Update is called once per frame
@@ -125,10 +141,29 @@ public class PlayerController : MonoBehaviour
             {
                 endSliding = false;
                 Vector2 newVel = myRB.velocity;
-                if (facingRight)
-                    newVel.x = slideSpeed;
+                if (grounded)
+                {
+                    if (facingRight)
+                        newVel.x = slideSpeed;
+                    else
+                        newVel.x = -slideSpeed;
+                }
                 else
-                    newVel.x = -slideSpeed;
+                {
+                    if (facingRight)
+                        newVel.x = diveSpeed.x;
+                    else
+                        newVel.x = -diveSpeed.x;
+                    newVel.y = diveSpeed.y;
+                    diving = true;
+
+                    Vector3 newRot = transform.localRotation.eulerAngles;
+                    if (facingRight)
+                        newRot.z = -diveRotation;
+                    else
+                        newRot.z = diveRotation;
+                    transform.rotation = Quaternion.Euler(newRot);
+                }
                 myRB.velocity = newVel;
 
                 transform.localScale *= slideSize;
@@ -141,7 +176,7 @@ public class PlayerController : MonoBehaviour
                     canSlide = false;
                 }
             }
-            if (sliding && ((facingRight && myRB.velocity.x <= slideStop) || (!facingRight && myRB.velocity.x >= -slideStop)))
+            if (sliding && !diving && ((facingRight && myRB.velocity.x <= slideStop) || (!facingRight && myRB.velocity.x >= -slideStop)))
             {
                 StopSliding();
             }
@@ -156,6 +191,26 @@ public class PlayerController : MonoBehaviour
                 LevelLoader loader = FindObjectOfType<LevelLoader>();
                 loader.ResetLevel(loader.CurrentLevel);
             }
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (diving && collision.gameObject.CompareTag("Floor"))
+        {
+            Vector2 newVel = myRB.velocity;
+                if (facingRight)
+                    newVel.x = slideSpeed;
+                else
+                    newVel.x = -slideSpeed;
+            myRB.velocity = newVel;
+            transform.rotation = ogRot;
+
+            Vector2 newPos = transform.position;
+            newPos.y -= positionOffset;
+            transform.position = newPos;
+
+            diving = false;
         }
     }
 

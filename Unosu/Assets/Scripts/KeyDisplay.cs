@@ -9,11 +9,11 @@ public class KeyDisplay : MonoBehaviour
     public GameObject Right;
     public GameObject Slide;
     PlayerController playerCont;
-    Color DarkGrey = Color.black;
-    Color UpColor;
-    Color LeftColor;
-    Color RightColor;
-    Color SlideColor;
+    public Color DarkGrey = Color.black;
+    public Color UpColor;
+    public Color LeftColor;
+    public Color RightColor;
+    public Color SlideColor;
 
     // Start is called before the first frame update
     void Start()
