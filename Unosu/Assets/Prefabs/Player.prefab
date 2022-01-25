@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2502572110160530872}
   - component: {fileID: 2502572110160530823}
   - component: {fileID: 2502572110160530875}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -148,6 +148,7 @@ MonoBehaviour:
   endSlideSpeed: 10
   endSlideStop: 3
   jumpSpeed: 8
+  groundDist: 0.7
   slideSpeed: 6
   slideSize: {x: 1.5, y: 0.5}
   slideStop: 1

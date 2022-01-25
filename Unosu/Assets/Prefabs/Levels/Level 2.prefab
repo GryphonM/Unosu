@@ -173,7 +173,7 @@ GameObject:
   - component: {fileID: 8248188910924098850}
   m_Layer: 0
   m_Name: Electric Pole 4
-  m_TagString: Untagged
+  m_TagString: Harm
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -513,7 +513,7 @@ GameObject:
   - component: {fileID: 8248188911175100336}
   m_Layer: 0
   m_Name: Electric Pole 3
-  m_TagString: Untagged
+  m_TagString: Harm
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1035,7 +1035,7 @@ GameObject:
   - component: {fileID: 8248188911739872560}
   m_Layer: 0
   m_Name: Electric Pole 5
-  m_TagString: Untagged
+  m_TagString: Harm
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1266,7 +1266,7 @@ GameObject:
   - component: {fileID: 8248188911968254457}
   m_Layer: 0
   m_Name: Electric Pole 2
-  m_TagString: Untagged
+  m_TagString: Harm
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1537,7 +1537,7 @@ GameObject:
   - component: {fileID: 8248188912108103471}
   m_Layer: 0
   m_Name: Electric Pole 1
-  m_TagString: Untagged
+  m_TagString: Harm
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

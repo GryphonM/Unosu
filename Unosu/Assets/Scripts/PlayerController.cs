@@ -17,6 +17,10 @@ public class PlayerController : MonoBehaviour
     [Space(10)]
 
     [SerializeField] float jumpSpeed;
+    [Tooltip("Distance from ground that player is considered grounded")]
+    [SerializeField] float groundDist = 0.1f;
+    [Tooltip("Distance from wall that player will stop colliding")]
+    [SerializeField] float wallDist = 0.1f;
 
     [Space(10)]
 
@@ -37,6 +41,7 @@ public class PlayerController : MonoBehaviour
     bool sliding = false;
     bool diving = false;
     bool walking = false;
+    bool hitWall = false;
 
     bool newLevel = true;
 
@@ -74,7 +79,7 @@ public class PlayerController : MonoBehaviour
             if (!newLevel)
             {
                 // Move Right
-                if (canMoveRight && !sliding && Input.GetKey(GameManager.Controls.MoveRight))
+                if (canMoveRight && !sliding && !hitWall && Input.GetKey(GameManager.Controls.MoveRight))
                 {
                     Vector2 newVel = new Vector2(walkSpeed, myRB.velocity.y);
                     myRB.velocity = newVel;
@@ -85,7 +90,7 @@ public class PlayerController : MonoBehaviour
                 }
 
                 // Move Left
-                if (canMoveLeft && !sliding && Input.GetKey(GameManager.Controls.MoveLeft))
+                if (canMoveLeft && !sliding && !hitWall && Input.GetKey(GameManager.Controls.MoveLeft))
                 {
                     Vector2 newVel = new Vector2(-walkSpeed, myRB.velocity.y);
                     myRB.velocity = newVel;
@@ -202,6 +207,49 @@ public class PlayerController : MonoBehaviour
                 LevelLoader loader = FindObjectOfType<LevelLoader>();
                 loader.ResetLevel(loader.CurrentLevel);
             }
+
+            //Floor and Wall Check Variables
+            float halfXScale = 0.5f * transform.localScale.x;
+            float halfYScale = 0.5f * transform.localScale.y;
+            
+            // Floor Check
+            RaycastHit2D midFloorHit = Physics2D.Raycast(transform.position, Vector2.down, halfYScale + groundDist);
+            RaycastHit2D rightFloorHit = Physics2D.Raycast(new Vector2(transform.position.x + halfXScale, transform.position.y), Vector2.down, halfYScale + groundDist);
+            RaycastHit2D leftFloorHit = Physics2D.Raycast(new Vector2(transform.position.x - halfXScale, transform.position.y), Vector2.down, halfYScale + groundDist);
+            if (midFloorHit.collider != null && midFloorHit.collider.CompareTag("Floor"))
+                grounded = true;
+            else if (rightFloorHit.collider != null && rightFloorHit.collider.CompareTag("Floor"))
+                grounded = true;
+            else if (leftFloorHit.collider != null && leftFloorHit.collider.CompareTag("Floor"))
+                grounded = true;
+            else
+                grounded = false;
+
+            // Wall Check
+            RaycastHit2D midWallHit;
+            RaycastHit2D topWallHit;
+            RaycastHit2D bottomWallHit;
+            if (facingRight)
+            {
+                midWallHit = Physics2D.Raycast(transform.position, Vector2.right, halfYScale + wallDist);
+                topWallHit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + halfYScale), Vector2.right, halfYScale + wallDist);
+                bottomWallHit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - halfYScale), Vector2.right, halfYScale + wallDist);
+            }
+            else
+            {
+                midWallHit = Physics2D.Raycast(transform.position, Vector2.left, halfYScale + wallDist);
+                topWallHit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + halfYScale), Vector2.left, halfYScale + wallDist);
+                bottomWallHit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - halfYScale), Vector2.left, halfYScale + wallDist);
+            }
+
+            if (midWallHit.collider != null && !midWallHit.collider.CompareTag("Harm"))
+                hitWall = true;
+            else if (topWallHit.collider != null && topWallHit.collider.CompareTag("Floor"))
+                hitWall = true;
+            else if (bottomWallHit.collider != null && bottomWallHit.collider.CompareTag("Floor"))
+                hitWall = true;
+            else
+                hitWall = false;
         }
     }
 
@@ -223,21 +271,6 @@ public class PlayerController : MonoBehaviour
 
             diving = false;
         }
-    }
-
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Floor"))
-        {
-            grounded = true;
-        }
-    }
-
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-
-        if (collision.gameObject.CompareTag("Floor"))
-            grounded = false;
     }
 
     private void StopSliding()
