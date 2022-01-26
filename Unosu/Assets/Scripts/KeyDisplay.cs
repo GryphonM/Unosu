@@ -19,10 +19,10 @@ public class KeyDisplay : MonoBehaviour
     void Start()
     {
         playerCont = FindObjectOfType<PlayerController>();
-        UpColor = Up.GetComponent<SpriteRenderer>().color;
-        LeftColor = Left.GetComponent<SpriteRenderer>().color;
-        RightColor = Right.GetComponent<SpriteRenderer>().color;
-        SlideColor = Slide.GetComponent<SpriteRenderer>().color;
+        Up.GetComponent<SpriteRenderer>().color = UpColor;
+        Left.GetComponent<SpriteRenderer>().color = LeftColor;
+        Right.GetComponent<SpriteRenderer>().color = RightColor;
+        Slide.GetComponent<SpriteRenderer>().color = SlideColor;
         
     }
 
@@ -31,10 +31,10 @@ public class KeyDisplay : MonoBehaviour
     {
         if (playerCont.canJump == true)
         {
-            Up.GetComponent<SpriteRenderer>().material.color = UpColor;
+            Up.GetComponent<SpriteRenderer>().color = UpColor;
         }
         else
-            Up.GetComponent<SpriteRenderer>().material.color = DarkGrey;
+            Up.GetComponent<SpriteRenderer>().color = DarkGrey;
         if (playerCont.canMoveLeft == true)
         {
             Left.GetComponent<SpriteRenderer>().color = LeftColor;
