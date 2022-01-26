@@ -26,8 +26,6 @@ public class PlayerController : MonoBehaviour
 
     [Tooltip("Initial speed added to the player when sliding")]
     [SerializeField] float slideSpeed;
-    [Tooltip("Size player becomes what sliding\nMay be swapped out if we do animation")]
-    [SerializeField] Vector2 slideSize;
     [Tooltip("The x velocity at which the player stops sliding")]
     [SerializeField] float slideStop;
     [Tooltip("The velocity the player dives downwards at")]
@@ -46,6 +44,9 @@ public class PlayerController : MonoBehaviour
     bool newLevel = true;
 
     Rigidbody2D myRB;
+    SpriteRenderer mySR;
+    BoxCollider2D myCol;
+    Animator myAnim;
     Quaternion ogRot;
 
     [Space(10)]
@@ -62,6 +63,9 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         myRB = GetComponent<Rigidbody2D>();
+        mySR = GetComponent<SpriteRenderer>();
+        myCol = GetComponent<BoxCollider2D>();
+        myAnim = GetComponent<Animator>();
         ogRot = transform.rotation;
     }
 
@@ -85,8 +89,12 @@ public class PlayerController : MonoBehaviour
                     myRB.velocity = newVel;
 
                     if (!facingRight)
+                    {
                         facingRight = !facingRight;
+                        mySR.flipX = !facingRight;
+                    }
                     walking = true;
+                    myAnim.SetBool("Walking", true);
                 }
 
                 // Move Left
@@ -96,8 +104,12 @@ public class PlayerController : MonoBehaviour
                     myRB.velocity = newVel;
 
                     if (facingRight)
+                    {
                         facingRight = !facingRight;
+                        mySR.flipX = !facingRight;
+                    }
                     walking = true;
+                    myAnim.SetBool("Walking", true);
                 }
 
                 // Stop Moving
@@ -116,6 +128,7 @@ public class PlayerController : MonoBehaviour
                     }
 
                     walking = false;
+                    myAnim.SetBool("Walking", false);
                 }
                 if (endSliding)
                 {
@@ -145,11 +158,10 @@ public class PlayerController : MonoBehaviour
 
                 Vector2 newVel = new Vector2(myRB.velocity.x, jumpSpeed);
                 myRB.velocity = newVel;
+                myAnim.SetBool("Jumped", true);
 
                 if (lockKeys)
-                {
                     canJump = false;
-                }
                 if (newLevel)
                     newLevel = false;
             }
@@ -184,10 +196,11 @@ public class PlayerController : MonoBehaviour
                 }
                 myRB.velocity = newVel;
 
-                transform.localScale *= slideSize;
-                transform.localPosition = new Vector2(transform.localPosition.x, transform.localPosition.y - (slideSize.y / 2));
+                //transform.localScale *= slideSize;
+                //transform.localPosition = new Vector2(transform.localPosition.x, transform.localPosition.y - (slideSize.y / 2));
 
                 sliding = true;
+                myAnim.SetBool("Sliding", true);
 
                 if (lockKeys)
                 {
@@ -208,80 +221,95 @@ public class PlayerController : MonoBehaviour
                 loader.ResetLevel(loader.CurrentLevel);
             }
 
-            //Floor and Wall Check Variables
-            float halfXScale = 0.5f * transform.localScale.x;
-            float halfYScale = 0.5f * transform.localScale.y;
-            
-            // Floor Check
-            RaycastHit2D midFloorHit = Physics2D.Raycast(transform.position, Vector2.down, halfYScale + groundDist);
-            RaycastHit2D rightFloorHit = Physics2D.Raycast(new Vector2(transform.position.x + halfXScale, transform.position.y), Vector2.down, halfYScale + groundDist);
-            RaycastHit2D leftFloorHit = Physics2D.Raycast(new Vector2(transform.position.x - halfXScale, transform.position.y), Vector2.down, halfYScale + groundDist);
-            if (midFloorHit.collider != null && midFloorHit.collider.CompareTag("Floor"))
-                grounded = true;
-            else if (rightFloorHit.collider != null && rightFloorHit.collider.CompareTag("Floor"))
-                grounded = true;
-            else if (leftFloorHit.collider != null && leftFloorHit.collider.CompareTag("Floor"))
-                grounded = true;
-            else
-                grounded = false;
-
-            // Wall Check
-            RaycastHit2D midWallHit;
-            RaycastHit2D topWallHit;
-            RaycastHit2D bottomWallHit;
-            if (facingRight)
+            // Floor and Wall Check
             {
-                midWallHit = Physics2D.Raycast(transform.position, Vector2.right, halfYScale + wallDist);
-                topWallHit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + halfYScale), Vector2.right, halfYScale + wallDist);
-                bottomWallHit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - halfYScale), Vector2.right, halfYScale + wallDist);
-            }
-            else
-            {
-                midWallHit = Physics2D.Raycast(transform.position, Vector2.left, halfYScale + wallDist);
-                topWallHit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + halfYScale), Vector2.left, halfYScale + wallDist);
-                bottomWallHit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - halfYScale), Vector2.left, halfYScale + wallDist);
-            }
+                //Floor and Wall Check Variables
+                float halfXScale = 0.5f * myCol.size.x;
+                float halfYScale = 0.5f * myCol.size.x;
 
-            if (midWallHit.collider != null && !midWallHit.collider.CompareTag("Harm"))
-                hitWall = true;
-            else if (topWallHit.collider != null && topWallHit.collider.CompareTag("Floor"))
-                hitWall = true;
-            else if (bottomWallHit.collider != null && bottomWallHit.collider.CompareTag("Floor"))
-                hitWall = true;
-            else
-                hitWall = false;
+                // Floor Check
+                RaycastHit2D midFloorHit = Physics2D.Raycast(transform.position, Vector2.down, halfYScale + groundDist);
+                RaycastHit2D rightFloorHit = Physics2D.Raycast(new Vector2(transform.position.x + halfXScale, transform.position.y), Vector2.down, halfYScale + groundDist);
+                RaycastHit2D leftFloorHit = Physics2D.Raycast(new Vector2(transform.position.x - halfXScale, transform.position.y), Vector2.down, halfYScale + groundDist);
+                if (midFloorHit.collider != null && midFloorHit.collider.CompareTag("Floor"))
+                {
+                    grounded = true;
+                    myAnim.SetBool("Grounded", true);
+                }
+                else if (rightFloorHit.collider != null && rightFloorHit.collider.CompareTag("Floor"))
+                {
+                    grounded = true;
+                    myAnim.SetBool("Grounded", true);
+                }
+                else if (leftFloorHit.collider != null && leftFloorHit.collider.CompareTag("Floor"))
+                {
+                    grounded = true;
+                    myAnim.SetBool("Grounded", true);
+                }
+                else
+                {
+                    grounded = false;
+                    myAnim.SetBool("Grounded", false);
+                }
+
+                // Wall Check
+                RaycastHit2D midWallHit;
+                RaycastHit2D topWallHit;
+                RaycastHit2D bottomWallHit;
+                if (facingRight)
+                {
+                    midWallHit = Physics2D.Raycast(transform.position, Vector2.right, halfYScale + wallDist);
+                    topWallHit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + halfYScale), Vector2.right, halfYScale + wallDist);
+                    bottomWallHit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - halfYScale), Vector2.right, halfYScale + wallDist);
+                }
+                else
+                {
+                    midWallHit = Physics2D.Raycast(transform.position, Vector2.left, halfYScale + wallDist);
+                    topWallHit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + halfYScale), Vector2.left, halfYScale + wallDist);
+                    bottomWallHit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - halfYScale), Vector2.left, halfYScale + wallDist);
+                }
+
+                if (!grounded && midWallHit.collider != null && !midWallHit.collider.CompareTag("Harm"))
+                    hitWall = true;
+                else if (!grounded && topWallHit.collider != null && !topWallHit.collider.CompareTag("Harm"))
+                    hitWall = true;
+                else if (!grounded && bottomWallHit.collider != null && !bottomWallHit.collider.CompareTag("Harm"))
+                    hitWall = true;
+                else
+                    hitWall = false;
+            }
         }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (diving && collision.gameObject.CompareTag("Floor"))
+        if (collision.gameObject.CompareTag("Floor"))
         {
-            Vector2 newVel = myRB.velocity;
+            if (diving)
+            {
+                Vector2 newVel = myRB.velocity;
                 if (facingRight)
                     newVel.x = slideSpeed;
                 else
                     newVel.x = -slideSpeed;
-            myRB.velocity = newVel;
-            transform.rotation = ogRot;
+                myRB.velocity = newVel;
+                transform.rotation = ogRot;
 
-            Vector2 newPos = transform.position;
-            newPos.y -= positionOffset;
-            transform.position = newPos;
+                Vector2 newPos = transform.position;
+                newPos.y -= positionOffset;
+                transform.position = newPos;
 
-            diving = false;
+                diving = false;
+            }
+
+            myAnim.SetBool("Jumped", false);
         }
     }
 
     private void StopSliding()
     {
-        transform.localScale /= slideSize;
-        Vector2 newPos = transform.localPosition;
-        if (facingRight)
-            newPos.x += Mathf.Abs(transform.localScale.x - slideSize.x) / 2;
-        else
-            newPos.x -= Mathf.Abs(transform.localScale.x - slideSize.x) / 2;
-        transform.localPosition = newPos;
         sliding = false;
+        myAnim.SetBool("Sliding", false);
+        myAnim.SetBool("Slid", false);
     }
 }
