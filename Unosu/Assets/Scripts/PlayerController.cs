@@ -67,6 +67,8 @@ public class PlayerController : MonoBehaviour
         myCol = GetComponent<BoxCollider2D>();
         myAnim = GetComponent<Animator>();
         ogRot = transform.rotation;
+
+        mySR.flipX = facingRight;
     }
 
     // Update is called once per frame
