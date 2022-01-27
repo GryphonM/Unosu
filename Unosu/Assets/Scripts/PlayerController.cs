@@ -227,12 +227,12 @@ public class PlayerController : MonoBehaviour
             {
                 //Floor and Wall Check Variables
                 float halfXScale = 0.5f * myCol.size.x;
-                float halfYScale = 0.5f * myCol.size.x;
+                float halfYScale = 0.5f * myCol.size.y;
 
                 // Floor Check
-                RaycastHit2D midFloorHit = Physics2D.Raycast(transform.position, Vector2.down, halfYScale + groundDist);
-                RaycastHit2D rightFloorHit = Physics2D.Raycast(new Vector2(transform.position.x + halfXScale, transform.position.y), Vector2.down, halfYScale + groundDist);
-                RaycastHit2D leftFloorHit = Physics2D.Raycast(new Vector2(transform.position.x - halfXScale, transform.position.y), Vector2.down, halfYScale + groundDist);
+                RaycastHit2D midFloorHit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + myCol.offset.y), Vector2.down, halfYScale + groundDist);
+                RaycastHit2D rightFloorHit = Physics2D.Raycast(new Vector2(transform.position.x + halfXScale, transform.position.y + myCol.offset.y), Vector2.down, halfYScale + groundDist);
+                RaycastHit2D leftFloorHit = Physics2D.Raycast(new Vector2(transform.position.x - halfXScale, transform.position.y + myCol.offset.y), Vector2.down, halfYScale + groundDist);
                 if (midFloorHit.collider != null && midFloorHit.collider.CompareTag("Floor"))
                 {
                     grounded = true;
