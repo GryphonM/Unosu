@@ -34,6 +34,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float diveRotation = 90;
     [Tooltip("Y change to position when finished diving")]
     [SerializeField] float positionOffset;
+    bool wallSlide = false;
 
     bool grounded = false;
     bool sliding = false;
@@ -85,7 +86,7 @@ public class PlayerController : MonoBehaviour
             if (!newLevel)
             {
                 // Move Right
-                if (canMoveRight && !sliding && !hitWall && Input.GetKey(GameManager.Controls.MoveRight))
+                if (canMoveRight && !sliding && (!hitWall || grounded) && Input.GetKey(GameManager.Controls.MoveRight))
                 {
                     Vector2 newVel = new Vector2(walkSpeed, myRB.velocity.y);
                     myRB.velocity = newVel;
@@ -100,7 +101,7 @@ public class PlayerController : MonoBehaviour
                 }
 
                 // Move Left
-                if (canMoveLeft && !sliding && !hitWall && Input.GetKey(GameManager.Controls.MoveLeft))
+                if (canMoveLeft && !sliding && (!hitWall || grounded) && Input.GetKey(GameManager.Controls.MoveLeft))
                 {
                     Vector2 newVel = new Vector2(-walkSpeed, myRB.velocity.y);
                     myRB.velocity = newVel;
@@ -172,6 +173,51 @@ public class PlayerController : MonoBehaviour
             if (canSlide && Input.GetKeyDown(GameManager.Controls.Slide))
             {
                 endSliding = false;
+                if (!hitWall)
+                {
+                    Vector2 newVel = myRB.velocity;
+                    if (grounded)
+                    {
+                        if (facingRight)
+                            newVel.x = slideSpeed;
+                        else
+                            newVel.x = -slideSpeed;
+                    }
+                    else
+                    {
+                        if (facingRight)
+                            newVel.x = diveSpeed.x;
+                        else
+                            newVel.x = -diveSpeed.x;
+                        newVel.y = diveSpeed.y;
+                        diving = true;
+
+                        Vector3 newRot = transform.localRotation.eulerAngles;
+                        if (facingRight)
+                            newRot.z = -diveRotation;
+                        else
+                            newRot.z = diveRotation;
+                        transform.rotation = Quaternion.Euler(newRot);
+                    }
+                    myRB.velocity = newVel;
+                }
+                else
+                {
+                    wallSlide = true;
+                }
+
+                sliding = true;
+                myAnim.SetBool("Sliding", true);
+
+                if (lockKeys)
+                {
+                    canSlide = false;
+                }
+                if (newLevel)
+                    newLevel = false;
+            }
+            if (myAnim.GetBool("Slid") && wallSlide)
+            {
                 Vector2 newVel = myRB.velocity;
                 if (grounded)
                 {
@@ -197,21 +243,9 @@ public class PlayerController : MonoBehaviour
                     transform.rotation = Quaternion.Euler(newRot);
                 }
                 myRB.velocity = newVel;
-
-                //transform.localScale *= slideSize;
-                //transform.localPosition = new Vector2(transform.localPosition.x, transform.localPosition.y - (slideSize.y / 2));
-
-                sliding = true;
-                myAnim.SetBool("Sliding", true);
-
-                if (lockKeys)
-                {
-                    canSlide = false;
-                }
-                if (newLevel)
-                    newLevel = false;
+                wallSlide = false;
             }
-            if (sliding && !diving && ((facingRight && myRB.velocity.x <= slideStop) || (!facingRight && myRB.velocity.x >= -slideStop)))
+            if (sliding && !diving && myAnim.GetBool("Slid") &&((facingRight && myRB.velocity.x <= slideStop) || (!facingRight && myRB.velocity.x >= -slideStop)))
             {
                 StopSliding();
             }
@@ -271,11 +305,11 @@ public class PlayerController : MonoBehaviour
                     bottomWallHit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - halfYScale), Vector2.left, halfYScale + wallDist);
                 }
 
-                if (!grounded && midWallHit.collider != null && !midWallHit.collider.CompareTag("Harm"))
+                if (midWallHit.collider != null && !midWallHit.collider.CompareTag("Harm"))
                     hitWall = true;
-                else if (!grounded && topWallHit.collider != null && !topWallHit.collider.CompareTag("Harm"))
+                else if (topWallHit.collider != null && !topWallHit.collider.CompareTag("Harm"))
                     hitWall = true;
-                else if (!grounded && bottomWallHit.collider != null && !bottomWallHit.collider.CompareTag("Harm"))
+                else if (bottomWallHit.collider != null && !bottomWallHit.collider.CompareTag("Harm"))
                     hitWall = true;
                 else
                     hitWall = false;
