@@ -68,7 +68,7 @@ public class PlayerController : MonoBehaviour
         myAnim = GetComponent<Animator>();
         ogRot = transform.rotation;
 
-        mySR.flipX = facingRight;
+        mySR.flipX = !facingRight;
     }
 
     // Update is called once per frame
