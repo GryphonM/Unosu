@@ -2359,7 +2359,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4557593338577106844, guid: 809fe9d9160743d40b9b49cb2ea1bae5, type: 3}
       propertyPath: m_LocalScale.y
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4557593338577106844, guid: 809fe9d9160743d40b9b49cb2ea1bae5, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2789,6 +2789,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4277267941202080723}
     m_Modifications:
+    - target: {fileID: 2795811907878005750, guid: 131df62483458534cbad0d7112bd4720, type: 3}
+      propertyPath: thrust
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4571138789430214096, guid: 131df62483458534cbad0d7112bd4720, type: 3}
       propertyPath: m_Name
       value: BounceGrid 1
