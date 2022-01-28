@@ -143,7 +143,6 @@ public class PlayerController : MonoBehaviour
                     myRB.velocity = newVel;
                     if ((facingRight && myRB.velocity.x <= endSlideStop) || (!facingRight && myRB.velocity.x >= -endSlideStop))
                     {
-                        newVel.x = 0;
                         myRB.velocity = newVel;
                         endSliding = false;
                     }
