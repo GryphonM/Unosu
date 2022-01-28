@@ -2458,7 +2458,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2502572110160530875, guid: 0072ca3e755c7c042909e0112682496c, type: 3}
       propertyPath: lockKeys
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2502572110160530875, guid: 0072ca3e755c7c042909e0112682496c, type: 3}
       propertyPath: resetOnOut
