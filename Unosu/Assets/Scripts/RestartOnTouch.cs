@@ -18,8 +18,8 @@ public class RestartOnTouch : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            collision.GetComponent<PlayerController>().PlayDeathSound();
             LevelLoader loader = FindObjectOfType<LevelLoader>();
+            loader.GetComponent<PlaySound>().PlayAudio();
             loader.ResetLevel(loader.CurrentLevel);
         }
     }
