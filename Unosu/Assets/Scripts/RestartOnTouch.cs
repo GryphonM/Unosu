@@ -19,6 +19,7 @@ public class RestartOnTouch : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
+            collision.GetComponent<PlayerController>().PlayDeathSound();
             LevelLoader loader = FindObjectOfType<LevelLoader>();
             loader.ResetLevel(loader.CurrentLevel);
         }

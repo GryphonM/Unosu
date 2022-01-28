@@ -25,6 +25,8 @@ public class BouncePads : MonoBehaviour
             Vector2 newVel = rb.velocity;
             newVel.y = thrust;
             rb.velocity = newVel;
+            PlayerController pc = collision.GetComponent<PlayerController>();
+            pc.PlayBounceSound();
         }
     }
 }

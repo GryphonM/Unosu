@@ -63,18 +63,22 @@ public class RefreshKeys : MonoBehaviour
                     Destroy(this.gameObject);
                     break;
                 case 1:
+                    playerCont.PlayCollectSound();
                     playerCont.canJump = true;
                     Destroy(this.gameObject);
                     break;
                 case 2:
+                    playerCont.PlayCollectSound();
                     playerCont.canMoveLeft = true;
                     Destroy(this.gameObject);
                     break;
                 case 3:
+                    playerCont.PlayCollectSound();
                     playerCont.canMoveRight = true;
                     Destroy(this.gameObject);
                     break;
                 case 4:
+                    playerCont.PlayCollectSound();
                     playerCont.canSlide = true;
                     Destroy(this.gameObject);
                     break;

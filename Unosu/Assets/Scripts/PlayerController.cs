@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public PlaySound jump;
+    public PlaySound slide;
+    public PlaySound collect;
+    public PlaySound bounce;
+    public PlaySound death;
+    GameManager gm;
     [SerializeField] float walkSpeed;
     [Tooltip("Backwards force applied to the player when stopping \n" +
         "Higher = Faster Stop")]
@@ -68,7 +74,7 @@ public class PlayerController : MonoBehaviour
         myCol = GetComponent<BoxCollider2D>();
         myAnim = GetComponent<Animator>();
         ogRot = transform.rotation;
-
+        gm = FindObjectOfType<GameManager>();
         mySR.flipX = !facingRight;
     }
 
@@ -160,6 +166,7 @@ public class PlayerController : MonoBehaviour
 
                 Vector2 newVel = new Vector2(myRB.velocity.x, jumpSpeed);
                 myRB.velocity = newVel;
+                jump.PlayAudio();
                 myAnim.SetBool("Jumped", true);
 
                 if (lockKeys)
@@ -207,6 +214,7 @@ public class PlayerController : MonoBehaviour
 
                 sliding = true;
                 myAnim.SetBool("Sliding", true);
+                slide.PlayAudio();
 
                 if (lockKeys)
                 {
@@ -346,5 +354,20 @@ public class PlayerController : MonoBehaviour
         sliding = false;
         myAnim.SetBool("Sliding", false);
         myAnim.SetBool("Slid", false);
+    }
+
+    public void PlayCollectSound()
+    {
+        collect.PlayAudio();
+    }
+
+    public void PlayBounceSound()
+    {
+        bounce.PlayAudio();
+    }
+
+    public void PlayDeathSound()
+    {
+        death.PlayAudio();
     }
 }
