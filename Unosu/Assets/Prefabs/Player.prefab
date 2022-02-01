@@ -284,13 +284,14 @@ MonoBehaviour:
   bounce: {fileID: 8175058202372086298}
   death: {fileID: 3973087914239951755}
   walkSpeed: 5
-  endSlideSpeed: 10
-  endSlideStop: 3
+  endSlideSpeed: 8
+  endSlideStop: 4
   jumpSpeed: 8
   groundDist: 0.1
   wallDist: 0.1
   slideSpeed: 6
   slideStop: 1
+  slideTime: 0.3
   diveSpeed: {x: 2, y: -5}
   diveRotation: 60
   positionOffset: 0.5

@@ -21,6 +21,7 @@ public class QuitGame : MonoBehaviour
 
     public void Reset()
     {
+        FindObjectOfType<KeyDisplay>().gameObject.SetActive(false);
         FindObjectOfType<LevelLoader>().SetLevel(1);
     }
 }

@@ -44,13 +44,15 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float slideSpeed;
     [Tooltip("The x velocity at which the player stops sliding")]
     [SerializeField] float slideStop;
+    [Tooltip("Time the player has to slide, if their velocity is 0 at the end, they will slide again")]
+    [SerializeField] float slideTime = 0.3f;
+    float slideTimer;
     [Tooltip("The velocity the player dives downwards at")]
     [SerializeField] Vector2 diveSpeed;
     [Tooltip("Rotation around the Z axis when diving")]
     [SerializeField] float diveRotation = 90;
     [Tooltip("Y change to position when finished diving")]
     [SerializeField] float positionOffset;
-    bool wallSlide = false;
 
     bool grounded = false;
     bool sliding = false;
@@ -84,6 +86,7 @@ public class PlayerController : MonoBehaviour
         myCol = GetComponent<BoxCollider2D>();
         myAnim = GetComponent<Animator>();
         ogRot = transform.rotation;
+        slideTimer = slideTime;
         gm = FindObjectOfType<GameManager>();
         mySR.flipX = !facingRight;
     }
@@ -149,20 +152,6 @@ public class PlayerController : MonoBehaviour
                     walking = false;
                     myAnim.SetBool("Walking", false);
                 }
-                if (endSliding)
-                {
-                    Vector2 newVel = myRB.velocity;
-                    if (facingRight)
-                        newVel.x -= Time.deltaTime * endSlideSpeed;
-                    else
-                        newVel.x += Time.deltaTime * endSlideSpeed;
-                    myRB.velocity = newVel;
-                    if ((facingRight && myRB.velocity.x <= endSlideStop) || (!facingRight && myRB.velocity.x >= -endSlideStop))
-                    {
-                        myRB.velocity = newVel;
-                        endSliding = false;
-                    }
-                }
             }
 
             // Jump
@@ -189,52 +178,6 @@ public class PlayerController : MonoBehaviour
             if (canSlide && Input.GetKeyDown(GameManager.Controls.Slide))
             {
                 endSliding = false;
-                if (!hitWall)
-                {
-                    Vector2 newVel = myRB.velocity;
-                    if (grounded)
-                    {
-                        if (facingRight)
-                            newVel.x = slideSpeed;
-                        else
-                            newVel.x = -slideSpeed;
-                    }
-                    else
-                    {
-                        if (facingRight)
-                            newVel.x = diveSpeed.x;
-                        else
-                            newVel.x = -diveSpeed.x;
-                        newVel.y = diveSpeed.y;
-                        diving = true;
-
-                        Vector3 newRot = transform.localRotation.eulerAngles;
-                        if (facingRight)
-                            newRot.z = -diveRotation;
-                        else
-                            newRot.z = diveRotation;
-                        transform.rotation = Quaternion.Euler(newRot);
-                    }
-                    myRB.velocity = newVel;
-                }
-                else
-                {
-                    wallSlide = true;
-                }
-
-                sliding = true;
-                myAnim.SetBool("Sliding", true);
-                slide.PlayAudio();
-
-                if (lockKeys)
-                {
-                    canSlide = false;
-                }
-                if (newLevel)
-                    newLevel = false;
-            }
-            if (myAnim.GetBool("Slid") && wallSlide)
-            {
                 Vector2 newVel = myRB.velocity;
                 if (grounded)
                 {
@@ -260,9 +203,59 @@ public class PlayerController : MonoBehaviour
                     transform.rotation = Quaternion.Euler(newRot);
                 }
                 myRB.velocity = newVel;
-                wallSlide = false;
+
+                sliding = true;
+                myAnim.SetBool("Sliding", true);
+                slide.PlayAudio();
+
+                if (lockKeys)
+                {
+                    canSlide = false;
+                }
+                if (newLevel)
+                    newLevel = false;
             }
-            if (sliding && !diving && myAnim.GetBool("Slid") &&((facingRight && myRB.velocity.x <= slideStop) || (!facingRight && myRB.velocity.x >= -slideStop)))
+            // Prevent player from being stopped in their initial slide
+            if (sliding)
+            {
+                if (slideTimer > 0)
+                {
+                    slideTimer -= Time.deltaTime;
+                }
+                
+                if (slideTimer <= 0)
+                {
+                    if(((facingRight && myRB.velocity.x <= slideStop) || (!facingRight && myRB.velocity.x >= -slideStop)))
+                    {
+                        Vector2 newVel = myRB.velocity;
+                        if (grounded)
+                        {
+                            if (facingRight)
+                                newVel.x = slideSpeed;
+                            else
+                                newVel.x = -slideSpeed;
+                        }
+                        else
+                        {
+                            if (facingRight)
+                                newVel.x = diveSpeed.x;
+                            else
+                                newVel.x = -diveSpeed.x;
+                            newVel.y = diveSpeed.y;
+                            diving = true;
+
+                            Vector3 newRot = transform.localRotation.eulerAngles;
+                            if (facingRight)
+                                newRot.z = -diveRotation;
+                            else
+                                newRot.z = diveRotation;
+                            transform.rotation = Quaternion.Euler(newRot);
+                        }
+                    }
+                }
+            }
+            // Stop Sliding
+            if (sliding && !diving && slideTimer <= 0 && ((facingRight && myRB.velocity.x <= slideStop) || (!facingRight && myRB.velocity.x >= -slideStop)))
             {
                 StopSliding();
             }
@@ -334,6 +327,26 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // Make sure the end slide acts the same
+    private void FixedUpdate()
+    {
+        if (endSliding)
+        {
+            Vector2 newVel = myRB.velocity;
+            if (facingRight)
+                newVel.x -= Time.fixedDeltaTime * endSlideSpeed;
+            else
+                newVel.x += Time.fixedDeltaTime * endSlideSpeed;
+            myRB.velocity = newVel;
+            if ((facingRight && myRB.velocity.x <= endSlideStop) || (!facingRight && myRB.velocity.x >= -endSlideStop))
+            {
+                newVel.x = 0;
+                myRB.velocity = newVel;
+                endSliding = false;
+            }
+        }
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Floor"))
@@ -362,6 +375,7 @@ public class PlayerController : MonoBehaviour
     private void StopSliding()
     {
         sliding = false;
+        slideTimer = slideTime;
         myAnim.SetBool("Sliding", false);
         myAnim.SetBool("Slid", false);
     }

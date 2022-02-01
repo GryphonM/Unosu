@@ -559,7 +559,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d79847d8a1da1964f91185d06b0357cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CurrentLevel: 1
+  CurrentLevel: 5
   levels:
   - {fileID: 753087383858994521, guid: 203cf7c438c71e44eac7fd0a2283bce4, type: 3}
   - {fileID: 7222006310191406993, guid: 075cc5dd2d1aa544b95971b16c9f688c, type: 3}
@@ -704,6 +704,10 @@ PrefabInstance:
     - target: {fileID: 753087383858994521, guid: 203cf7c438c71e44eac7fd0a2283bce4, type: 3}
       propertyPath: m_Name
       value: MainMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 4627753863749979572, guid: 203cf7c438c71e44eac7fd0a2283bce4, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7546691648646924384, guid: 203cf7c438c71e44eac7fd0a2283bce4, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
