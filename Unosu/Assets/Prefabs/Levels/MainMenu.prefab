@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7573480402448585020}
+  - component: {fileID: 9019755817033875999}
   m_Layer: 0
   m_Name: MainMenu
   m_TagString: Untagged
@@ -43,6 +44,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9019755817033875999
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 753087383858994521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efc66fc806bb64e43877f85171246a22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1983364573759257534
 GameObject:
   m_ObjectHideFlags: 0
@@ -662,6 +675,7 @@ GameObject:
   - component: {fileID: 7546691648646924390}
   - component: {fileID: 7546691648646924391}
   - component: {fileID: 7546691648646924384}
+  - component: {fileID: 2965532522482320639}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -771,8 +785,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: LevelLoader, Assembly-CSharp
+      - m_Target: {fileID: 2965532522482320639}
+        m_TargetAssemblyTypeName: ButtonStart, Assembly-CSharp
         m_MethodName: NextLevel
         m_Mode: 1
         m_Arguments:
@@ -783,6 +797,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &2965532522482320639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7546691648646924386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c23a7bd478b80644b3d27df04cc1c12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7546691648900106107
 GameObject:
   m_ObjectHideFlags: 0

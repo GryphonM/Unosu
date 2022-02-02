@@ -215,17 +215,27 @@ public class PlayerController : MonoBehaviour
                 if (newLevel)
                     newLevel = false;
             }
+            // Stop Sliding
+            if (sliding && !diving && slideTimer <= 0 && myAnim.GetBool("Slid") && ((facingRight && myRB.velocity.x <= slideStop) || (!facingRight && myRB.velocity.x >= -slideStop)))
+            {
+                StopSliding();
+            }
             // Prevent player from being stopped in their initial slide
             if (sliding)
             {
                 if (slideTimer > 0)
                 {
                     slideTimer -= Time.deltaTime;
+
+                    if (myAnim.GetBool("Slid") && !hitWall)
+                    {
+                        slideTimer = 0;
+                    }
                 }
-                
+
                 if (slideTimer <= 0)
                 {
-                    if(((facingRight && myRB.velocity.x <= slideStop) || (!facingRight && myRB.velocity.x >= -slideStop)))
+                    if (((facingRight && myRB.velocity.x <= slideStop) || (!facingRight && myRB.velocity.x >= -slideStop)))
                     {
                         Vector2 newVel = myRB.velocity;
                         if (grounded)
@@ -251,13 +261,9 @@ public class PlayerController : MonoBehaviour
                                 newRot.z = diveRotation;
                             transform.rotation = Quaternion.Euler(newRot);
                         }
+                        myRB.velocity = newVel;
                     }
                 }
-            }
-            // Stop Sliding
-            if (sliding && !diving && slideTimer <= 0 && ((facingRight && myRB.velocity.x <= slideStop) || (!facingRight && myRB.velocity.x >= -slideStop)))
-            {
-                StopSliding();
             }
 
             // Restart
@@ -327,7 +333,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // Make sure the end slide acts the same
+    // Make sure the walking end slide acts the same
     private void FixedUpdate()
     {
         if (endSliding)
