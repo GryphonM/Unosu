@@ -683,10 +683,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: MainMenu
       objectReference: {fileID: 0}
-    - target: {fileID: 4627753863749979572, guid: 203cf7c438c71e44eac7fd0a2283bce4, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7573480402448585020, guid: 203cf7c438c71e44eac7fd0a2283bce4, type: 3}
       propertyPath: m_RootOrder
       value: 3
